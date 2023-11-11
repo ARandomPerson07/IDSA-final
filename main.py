@@ -111,7 +111,7 @@ def main(win, width):
                             end = None
 
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE and not started:
+                if event.key == pygame.K_SPACE and not started and start and end:
                     started = True
                     # show_grid(grid)
                     for row in grid:

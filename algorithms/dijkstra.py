@@ -60,7 +60,9 @@ def algorithm(draw, grid: List[List[Node]], start, end):
             path_len += 1
             path_current = previous[path_current]
             time.sleep(0.002)
+            draw()
         return True, path_len, end_time - start_time, len(visited)
     else:
+        end_time = time.time()
         print("No Path Found")
-        return False, -1, -1, len(visited)
+        return False, -1, end_time - start_time, len(visited)

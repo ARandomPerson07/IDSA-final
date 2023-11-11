@@ -83,5 +83,6 @@ def algorithm(draw, grid, start, end):
             draw()
         return True, path_len, end_time - start_time, visited_count
     else:
+        end_time = time.time()
         print("Path not found")
-        return False, -1, -1, visited_count
+        return False, -1, end_time - start_time, visited_count

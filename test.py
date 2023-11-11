@@ -1,6 +1,7 @@
 import pygame
 from components.node import Node
 from components.colors import *
+import time
 
 
 def make_grid(rows, width):
@@ -14,5 +15,12 @@ def draw_grid(win, rows, width):
         pygame.draw.line(win, GREY, (0, i * gap), (width, i * gap))
     for i in range(rows):  # vertical lines
         pygame.draw.line(win, GREY, (i * gap, 0), (i * gap, width))
-    # draw the last vertical line that separates the menu from the play field
-    pygame.draw.line(win, GREY, (width, 0), (width, width))
+
+
+win = pygame.display.set_mode((800, 800))
+
+grid = make_grid(50, 800)
+
+draw_grid(win, 50, 800)
+pygame.display.update()
+time.sleep(5)

@@ -8,6 +8,7 @@ from queue import PriorityQueue
 from typing import List
 from components.node import Node
 from components.colors import *
+import time
 
 
 def heuristic(p1, p2):
@@ -18,12 +19,16 @@ def heuristic(p1, p2):
 
 def algorithm(draw, grid, start, end):
     # print("algo running")
+    start_time = time.time()
     count = 0
     opens = PriorityQueue()
     opens.put((0, count, start))
     came_from = {}
     path_found = False
+    # track space complexity
+    visited_count = 0
 
+    # init g_score and f_score arrays
     g_score = {node: float("inf") for row in grid for node in row}
     g_score[start] = 0
 
@@ -32,6 +37,7 @@ def algorithm(draw, grid, start, end):
 
     opens_hash = {start}  # tracks which nodes have been visited
     while not opens.empty() and not path_found:
+        visited_count += 1
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -42,6 +48,7 @@ def algorithm(draw, grid, start, end):
 
         if current == end:
             path_found = True
+            end_time = time.time()
             break
         # print("number of neighbours of node is ", len(current.neighbours))
         for neighbour in current.neighbours:
@@ -66,12 +73,15 @@ def algorithm(draw, grid, start, end):
 
     if path_found:
         # backtrack and visualise path
+        path_len = 1
         path_current: Node = came_from[end]
         while path_current != start:
             path_current.make_path()
+            time.sleep(0.002)
             path_current = came_from[path_current]
+            path_len += 1
             draw()
-        return True
+        return True, path_len, end_time - start_time, visited_count
     else:
         print("Path not found")
-        return False
+        return False, -1, -1, visited_count

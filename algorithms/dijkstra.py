@@ -2,9 +2,65 @@ import pygame
 from typing import List
 from queue import PriorityQueue
 from components.node import Node
-#the algorithm's job is to take in a draw function, a grid, a start, and an end, and find the shortest path via backtracking
-#it is also in charge of changing the states of each node in the grid
+import time
 
-def algorithm(draw, grid : List[List[Node]], start, end):
-    #step 1 : initialise neighbours is already done
-    #step 2 : we use a priority queue to track the next node to traverse
+
+def algorithm(draw, grid: List[List[Node]], start, end):
+    start_time = time.time()
+    print("Executing Djikstra's Algorithm")
+    # step 1 : initialise neighbours is already done
+    # step 2 : we use a priority queue to track the next node to traverse
+    pq = PriorityQueue()
+    visited = set()
+    dists = {node: float('inf') for row in grid for node in row}
+    dists[start] = 0
+    previous = {}
+    pq.put((0, start))  # (dist, node)
+    path_found = False
+
+    while not pq.empty() and not path_found:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+
+        current_dist, current_node = pq.get()
+        visited.add(current_node)
+        # print("added to visited")
+        if current_node == end:
+            path_found = True
+            end_time = time.time()
+            break
+
+        for neighbour in current_node.neighbours:
+            # print("current node distance", dists[current_node])
+            # print("neighbour distance", dists[neighbour])
+            if dists[current_node] + 1 < dists[neighbour]:
+                dists[neighbour] = dists[current_node] + \
+                    1  # all distances are 1
+                previous[neighbour] = current_node
+
+                # add to prio queue
+                if neighbour not in visited:
+                    # print("this neighbour has not been visited, adding")
+                    pq.put((dists[neighbour], neighbour))
+                    if not neighbour == end:
+                        neighbour.make_open()
+
+        draw()
+
+        if not current_node == start and not current_node == end:
+            current_node.make_closed()
+
+    if path_found:
+        print("Path found")
+        path_len = 1
+        path_current = previous[current_node]
+        while path_current != start:
+            path_current.make_path()
+            path_len += 1
+            path_current = previous[path_current]
+            time.sleep(0.002)
+        return True, path_len, end_time - start_time, len(visited)
+    else:
+        print("No Path Found")
+        return False, -1, -1, len(visited)

@@ -18,19 +18,24 @@ def algorithm(draw, grid: List[List[Node]], start, end):
     pq.put((0, start))  # (dist, node)
     path_found = False
 
+    # pathfinding loop
     while not pq.empty() and not path_found:
+        # quit should always take priority
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
 
-        current_dist, current_node = pq.get()
+        current_node = pq.get()
         visited.add(current_node)
         # print("added to visited")
+
+        # check if end has been found
         if current_node == end:
             path_found = True
             end_time = time.time()
             break
 
+        # iterate over neighbours
         for neighbour in current_node.neighbours:
             # print("current node distance", dists[current_node])
             # print("neighbour distance", dists[neighbour])
@@ -46,6 +51,7 @@ def algorithm(draw, grid: List[List[Node]], start, end):
                     if not neighbour == end:
                         neighbour.make_open()
 
+        # call draw to update the grid
         draw()
 
         if not current_node == start and not current_node == end:

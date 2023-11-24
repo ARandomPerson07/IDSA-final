@@ -1,4 +1,5 @@
 from typing import List
+import sys
 
 import pygame
 
@@ -8,7 +9,7 @@ from components.user_interface import *
 from algorithms.a_star import algorithm as a_star_algo
 from algorithms.dijkstra import algorithm as djikstra_algo
 # initialize stuff
-WIDTH = 800
+WIDTH = 750
 SIDEBAR_WIDTH = 200
 WIN = pygame.display.set_mode((WIDTH + SIDEBAR_WIDTH, WIDTH))
 pygame.display.set_caption("Final Project Pathfinding Visualiser")
@@ -35,8 +36,8 @@ def draw(win, grid: List[List[Node]], rows, width, *misc_ui):
     pygame.display.update()
 
 
-def main(win, width):
-    ROWS = 20
+def main(win, width, rows=20):
+    ROWS = rows
     grid = make_grid(ROWS, width)
     # win.fill(WHITE)
     # draw_grid(win, ROWS, width)
@@ -78,6 +79,7 @@ def main(win, width):
             if event.type == pygame.QUIT:
                 run = False
 
+            # mouse input processing
             if not started:
                 if pygame.mouse.get_pressed()[0]:  # left click
                     pos = pygame.mouse.get_pos()
@@ -111,6 +113,7 @@ def main(win, width):
                             end = None
 
             if event.type == pygame.KEYDOWN:
+                # start logic
                 if event.key == pygame.K_SPACE and not started and start and end:
                     started = True
                     # show_grid(grid)
@@ -128,6 +131,8 @@ def main(win, width):
                         f"Results will show up here\n\nLast Runtime: {runtime:.4f}s\n\nPath Length: {path_len} Steps\n\nTraversed Nodes: {space}")
                     draw(win, grid, ROWS, width, algo_toggle,
                          header, header2, header3)
+
+                # soft clear
                 if event.key == pygame.K_BACKSPACE:
                     started = False
                     print("Clearing results")
@@ -135,6 +140,8 @@ def main(win, width):
                         for node in row:
                             if not ((node.is_barrier() or node.is_start()) or node.is_end()):
                                 node.reset()
+
+                # hard clear
                 if event.key == pygame.K_ESCAPE:
                     started = False
                     for row in grid:
@@ -145,4 +152,8 @@ def main(win, width):
     pygame.quit()
 
 
-main(WIN, WIDTH)
+# allow user to set custom dimensions
+if len(sys.argv) > 1:
+    main(WIN, WIDTH, int(sys.argv[1]))
+else:
+    main(WIN, WIDTH)

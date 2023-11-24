@@ -1,105 +1,42 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/jugTuFiY)
-# Graph Algorithm Visualizer
+# Pathfinding Algorithm Visualizer
 
-## Description
+## Description of Algorithms Implemented
 
-Develop a visualization tool for graph traversal algorithms, focusing on Dijkstra and A* algorithms, utilizing Python and Pygame.
+Two algorithms were implemented for this project: Dijkstra's algorithm and A*algorithm. Both algorithms are used to find the shortest path between two nodes in a graph. The difference between the two algorithms is that A* uses a heuristic function to estimate the distance between the current node and the end node, while Dijkstra's algorithm does not. This means that A* is more efficient than Dijkstra's algorithm, but it is not guaranteed to find the shortest path.
 
-## Project Structure
+A* is guaranteed to find the shortest path if the heuristic function is "admissible", i.e. it never overestimates the distance between the current node and the end node. In this project, the heuristic function used is the Manhattan distance, which is the sum of the absolute values of the differences in the x and y coordinates of the current node and the end node. This heuristic function is admissible because the shortest distance between two points is a straight line, and the Manhattan distance is always less than or equal to the straight line distance.
 
-- **algorithms**
-  - `dijkstra.py`: Implementation of Dijkstra's algorithm.
-  - `a_star.py`: Implementation of A* algorithm for pathfinding.
-- **components**
-  - `spot.py`: Definition and management of a spot/node in the grid.
-  - `grid.py`: Handling grid functionality, drawings, and updates.
-- **assets**
-  - `demo.mov`: A demonstration video providing an example of expected outcomes.
-- **main.py**: Main script to execute the application.
-- **pyproject.toml**: Configuration file for Poetry, outlining project dependencies.
+## Code Structure
 
-## Prerequisites
+To preserve modularity and readability, the code was split into multiple files.
 
-- **Python** (3.x recommended)
-- **Poetry**
-- **Pygame**
+- The main file is ```main.py```, which contains the main loop of the program. It is responsible for creating the grid, accepting user input, and calling the pathfinding algorithms.
+- The ```algorithms``` folder contains the ```dijkstra.py``` and ```astar.py``` files, which contain the implementations of Dijkstra's algorithm and A* algorithm respectively. These algorithms are implemented as functions that take in a "draw" function, a grid and the start and end nodes as parameters, and return the path as a list of nodes. The "draw" function is a function dynamically declared with the target window and the internal grid matrix in the main loop that is called after every node traversal, and is used to update the display.  This allows the algorithm to be visualized in real time.
+- The ```grid.py``` file contains the ```Grid``` class, which is responsible for drawing the grid and initializing the internal representation of the grid, which is a 2D array of ```Node``` objects.
+- The ```node.py``` file contains the ```Node``` class, which represents a single node in the grid. It also provides abstractions for drawing the node and changing its state.
+- The ```colors.py``` file contains the colors used in the program, providing abstractions for colours to avoid handling messy RGB values.
+- The ```user_interface.py``` file contains the custom classes for text and buttons, which are used to display text and buttons on the screen. These classes are used to create the user interface for the program.
 
-To install dependencies, utilize Poetry:
-```bash
-poetry add pygame
-```
+## Encountered Issues or Challenges
 
-Ensure the virtual environment is active when running the project.
+The main issue encountered in this project was the usage of the unfamiliar Pygame library. Coming from a more visual interface editor like Godot, it was difficult to understand how to use Pygame to draw elements on screen. However, after watching the tutorial videos and reading the documentation, it was relatively straightforward, if not a little obtuse with having to implement my own basic classes like text and buttons.
 
-## Requirements
+## Instructions on code execution
 
-### Core Features
+In a terminal environment with Python 3 installed and the pygame library installed, simply do ```python3 main.py```. The program will then run and the user can interact with the program.
 
-- Implement and visualize **Dijkstra and A* algorithms** using Pygame.
-- **Path Tracing**: Implement a smooth animation to trace the final path.
-- Allow users to:
-  - Define **start** and **end** nodes.
-  - **Draw barriers** and **clear** them.
-  - **Select** an algorithm to execute.
-  - **Reset** the grid or **clear** the previously found path, while retaining barriers. Ensure that the algorithm can be run again after clearing the path.
-- Ensure the pathfinding algorithm **terminates once the start node finds the end node**.
+In addition, running ```python3 main.py <size>``` allows the user to specify the size of the grid. For example, ```python3 main.py 50``` will create a grid of size 50x50. The default size is 20x20.
 
-Please check out the demonstration video for a better understanding of the core features in the assets folder.
+## Additional Features Implemented
 
-### [Optional] Additional Features (For Groups of 2 or 3)
+In addition to the basic features laid out in the requirements, I also implemented the following features:
 
-- Implement **one (groups of 2) or two (groups of 3)** additional graph traversal algorithms.
-- Display pathfinding statistics. They must at least include:
-  - Time taken to traverse.
-  - How many nodes were traversed (space complexity).
-  - One or two additional statistics of your choice. The more the merrier. Be creative!
+- The user can choose between Dijkstra's algorithm and A* algorithm at any time during the program except when the pathfinding algorithm is running, and not just during the initial setup.
 
-Note these features are a must if you are in a group of 2 or 3. If you are a solo participant, you can implement these features for extra points.
+- The user can either choose to clear the path without clearing the barriers, or clear both the path and the barriers.
 
-### Bonus: Beat Python’s Built-in (10% Extra Points)
+- Runtime statistics are displayed at the end of the pathfinding algorithm, including the time taken to traverse, the number of nodes traversed, and the total distance of the path.
 
-Outperform Python's built-in graph traversal in terms of time complexity using one of your implemented algorithms. Ensure relevant comparisons (e.g., Dijkstra with Dijkstra). Document your results, methodology, and findings in your README.md. It is also important to mention why your implementation is able to outperform (or not) the built-in traversal. Bonus points can carry over to other assignments, such as the midterm. Of course, if you produce very impressive results, you may be rewarded with more than 10% extra points and might consider writing a paper about it. You can be creative with your methodology, but ensure that it is valid and reproducible. Include unit tests and screenshots of your results.
+## Group Members
 
-### Note
-
-Feel free to modify the given template code according to your project needs.
-
-## Grading Rubric
-
-1. **Algorithm Implementation and Visualization**: 50% (65% for solo participants)
-   - Effective implementation and visualization of **Dijkstra and A* algorithms**.
-2. **Code Quality and User Interaction**: 15%
-   - Maintain code quality and ensure intuitive user interactions.
-   - Modular code with proper documentation.
-   - If you want more methodology points, please make sure your code is properly organized and documented so that I can understand your methodology. If not properly documented, I will not be able to understand your methodology and will not be able to give you points.
-3. **Testing and Validation**: 20%
-   - Validate the algorithm’s correctness and efficiency through testing.
-4. [Optional] **Pathfinding Statistics**: 5% (for groups only)
-   - Time taken to traverse.
-   - How many nodes were traversed (space complexity).
-   - One or two additional statistics of your choice. The more the merrier. Be creative!
-5. [Optional] **Additional Algorithm(s) Implementation**: 10% (for groups only)
-   - Implement two more graph traversal algorithms at least.
-
-
-## Submission
-
-Ensure to push your final code to your designated repository before the deadline.
-
-Wishing you the best of luck, and happy coding!
-
-## Your README
-
-In your ```README.md```, include:
-- Descriptions of algorithms implemented.
-- Encountered issues or challenges.
-- Instructions on code execution.
-- [If applicable] Methodology and findings from the bonus challenge of beating Python’s built-in algorithms.
-- Any extra information you would like to share with me.
-- **List the names of all group members, or your own name if you are a solo participant.**
-
-### Tutorial
-
-For further guidance on implementing pathfinding algorithms, consider watching the following tutorial: [Coding Train A* Algorithm Tutorial](https://www.youtube.com/watch?v=JtiK0DOeI4A). This resource may provide additional insights or methods for executing pathfinding algorithms in visual formats.
-
-**Note:** Plagiarism of code from this tutorial will result in a grade of 0 for this assignment. Please ensure that you are not copying code from this tutorial, and that you are implementing the algorithms yourself.
+- Chan, Adam Christopher Yamson A0242453L
